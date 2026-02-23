@@ -6,7 +6,7 @@
 /*   By: edi-maio <edi-maio@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 10:23:26 by edi-maio          #+#    #+#             */
-/*   Updated: 2026/02/11 19:40:15 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/02/23 14:19:59 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,10 @@ int	test_values(char **av)
 void	ft_parse(int ac, char **av, t_table *table)
 {
 	if (!test_values(av))
+	{
+		free(table);
 		exit(0);
+	}
 	table->nb_philo = ft_atoi(av[1]);
 	table->time_to_die = ft_atoi(av[2]);
 	table->time_to_eat = ft_atoi(av[3]);
@@ -39,7 +42,8 @@ void	ft_parse(int ac, char **av, t_table *table)
 	table->forks = init_forks(table);
 	table->running = 1;
 	table->valid_running = pthread_mutex_init(&(table->lock_running), NULL);
-	if (!table->forks)
+	table->valid_start = pthread_mutex_init(&(table->lock_start), NULL);
+	if (!table->forks || table->valid_running || table->valid_start)
 		clear_table(table);
 	table->philos = init_philos(table);
 	if (!table->philos)

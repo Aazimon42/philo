@@ -6,7 +6,7 @@
 /*   By: edi-maio <edi-maio@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 10:42:46 by edi-maio          #+#    #+#             */
-/*   Updated: 2026/02/11 19:52:49 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/02/23 14:11:08 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,14 +22,20 @@ long	get_time(void)
 
 void	display_status(int status, t_philo *philo)
 {
-	static char	*tab[] = {"%dl %d died\n",
+	static char	*tab[] = {"%d %d died\n",
 		"%d %d is eating\n",
 		"%d %d is sleeping\n",
 		"%d %d is thinking\n",
 		"%d %d has taken a fork\n"};
+	long		timestamp;
 
 	pthread_mutex_lock(&philo->table->lock_running);
 	if (philo->table->running)
-		printf(tab[status], get_time(), philo->id);
+	{
+		pthread_mutex_lock(&philo->table->lock_start);
+		timestamp = get_time() - philo->table->start;
+		printf(tab[status], timestamp, philo->id);
+		pthread_mutex_unlock(&philo->table->lock_start);
+	}
 	pthread_mutex_unlock(&philo->table->lock_running);
 }

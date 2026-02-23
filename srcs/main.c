@@ -6,7 +6,7 @@
 /*   By: edi-maio <edi-maio@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/17 12:54:29 by edi-maio          #+#    #+#             */
-/*   Updated: 2026/02/11 20:30:07 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/02/23 14:15:11 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,11 +32,8 @@ void	clear_table(t_table *table)
 	i = 0;
 	if (table->forks)
 	{
-		while (i < table->nb_philo)
-		{
-			pthread_mutex_destroy(&table->forks[i].lock);
-			i++;
-		}
+		while (i < table->nb_philo && table->forks->valid_mutex)
+			pthread_mutex_destroy(&table->forks[i++].lock);
 		free(table->forks);
 	}
 	i = 0;
@@ -50,7 +47,10 @@ void	clear_table(t_table *table)
 		}
 		free(table->philos);
 	}
-	pthread_mutex_destroy(&table->lock_running);
+	if (table->valid_running)
+		pthread_mutex_destroy(&table->lock_running);
+	if (table->valid_start)
+		pthread_mutex_destroy(&table->lock_start);
 	free(table);
 }
 
@@ -91,6 +91,8 @@ t_philo	*init_philos(t_table *table)
 		philos[i].last_eat = table->start;
 		philos[i].valid_last = pthread_mutex_init(&(philos[i].lock_last), NULL);
 		philos[i].valid_ate = pthread_mutex_init(&(philos[i].lock_ate), NULL);
+		if (philos[i].valid_last || philos[i].valid_ate)
+			return (0);
 		i++;
 	}
 	return (philos);

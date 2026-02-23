@@ -6,7 +6,7 @@
 /*   By: edi-maio <edi-maio@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/17 12:54:10 by edi-maio          #+#    #+#             */
-/*   Updated: 2026/02/11 20:47:37 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/02/23 14:06:11 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,8 @@ typedef struct s_table
 	int				time_to_sleep;
 	int				nb_to_eat;
 	long			start;
+	pthread_mutex_t	lock_start;
+	int				valid_start;
 }	t_table;
 
 typedef enum e_status
