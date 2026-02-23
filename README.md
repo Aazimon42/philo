@@ -14,13 +14,17 @@ The project focuses on thread management, mutexes, and safe memory handling usin
 
 Compile the project using:
 
-'''make'''
+```bash
+make
+```
 
 ### Execution
 
 Run the program by passing a list of integers as arguments:
 
-'''./philo number_of_philosophers time_to_die time_to_eat time_to_sleep [number_of_times_each_philosopher_must_eat]'''
+```bash
+./philo number_of_philosophers time_to_die time_to_eat time_to_sleep [number_of_times_each_philosopher_must_eat]'''
+```
 
 ## Resources
 
