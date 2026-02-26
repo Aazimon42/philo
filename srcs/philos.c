@@ -6,7 +6,7 @@
 /*   By: edi-maio <edi-maio@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 10:36:47 by edi-maio          #+#    #+#             */
-/*   Updated: 2026/02/11 20:39:37 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/02/26 11:03:27 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,10 +36,20 @@ void	routine_think(t_philo *philo)
 
 void	routine_eat(t_philo *philo)
 {
-	pthread_mutex_lock(&philo->l_fork->lock);
-	display_status(L_FORK, philo);
-	pthread_mutex_lock(&philo->r_fork->lock);
-	display_status(R_FORK, philo);
+	if (philo->id == 1)
+	{
+		pthread_mutex_lock(&philo->r_fork->lock);
+		display_status(R_FORK, philo);
+		pthread_mutex_lock(&philo->l_fork->lock);
+		display_status(L_FORK, philo);
+	}
+	else
+	{
+		pthread_mutex_lock(&philo->l_fork->lock);
+		display_status(L_FORK, philo);
+		pthread_mutex_lock(&philo->r_fork->lock);
+		display_status(R_FORK, philo);
+	}
 	display_status(EATING, philo);
 	pthread_mutex_lock(&philo->lock_last);
 	philo->last_eat = get_time();
@@ -51,7 +61,6 @@ void	routine_eat(t_philo *philo)
 	display_status(SLEEPING, philo);
 	pthread_mutex_unlock(&philo->l_fork->lock);
 	pthread_mutex_unlock(&philo->r_fork->lock);
-	ft_sleep(philo->table, philo->table->time_to_sleep);
 }
 
 void	*routine(void *data)
@@ -75,6 +84,7 @@ void	*routine(void *data)
 	while (check_running(philo->table))
 	{
 		routine_eat(philo);
+		ft_sleep(philo->table, philo->table->time_to_sleep);
 		if (!check_running(philo->table))
 			break ;
 		routine_think(philo);
